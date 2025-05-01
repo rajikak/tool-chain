@@ -17,20 +17,6 @@ jobs:
           ls ${{ github.workspace }}
       - uses: adrianjost/files-sync-action@v2.0.4
         with:
-          GIT_EMAIL: nrajikak@gmail.com
-          FILE_PATTERNS: |
-            ^LICENSE$
-            ^.github/workflows/sync-.*
-            README.md
-            .gitignore
-            src/
-            Cargo.lock
-            Cargo.toml
-          GITHUB_TOKEN: '${{ secrets.BARANASOFTWARE_TOKEN }}'
-          TARGET_REPOS: |
-            baranasoftware/tool-chain:main
-      - uses: adrianjost/files-sync-action@v2.0.4
-        with:
           GIT_EMAIL: nkconsultinglab@gmail.com
           FILE_PATTERNS: |
             ^LICENSE$
