@@ -1,4 +1,4 @@
-A linker written in Rust.
+A tool chain written in Rust.
 
 # Reference Materials
 * [A ToC of the 20 part linker essay](https://lwn.net/Articles/276782/)
