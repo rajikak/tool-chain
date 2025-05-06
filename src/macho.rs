@@ -1,15 +1,34 @@
 #[derive(Debug)]
 pub struct MachoFile {
     // https://github.com/aidansteele/osx-abi-macho-file-format-reference
-    pub header: MachoHeader
+    pub header: MachoHeader,
+    pub commands:Vec<SegmentCommand>,
+    pub segments:Vec<Segment>,
 }
 
 #[derive(Debug)]
 pub struct MachoHeader {
-    pub ident:MachoIdentifier,         
+    // https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L54
+    pub magic:MachoIdentifier,
+}
+
+#[derive(Debug)]
+pub struct SegmentCommand {
+    // https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L355    
+}
+
+#[derive(Debug)]
+pub struct Segment {
+        
 }
 
 #[derive(Debug)]
 pub struct MachoIdentifier {
+
+}
+
+#[derive(Debug)]
+pub struct MachoCommand {
     
 }
+

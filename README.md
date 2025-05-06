@@ -1,4 +1,4 @@
-A simple toolchain(file, strings, strip, readelf, assembler, linker, loader, disassembler) written in Rust.
+A simple toolchain(file, strings, strip, readelf, hexdump, assembler, linker, loader, disassembler) written in Rust.
 
 ## ELF File Formats
 * Linux ([Source](https://ics.uci.edu/~aburtsev/238P/hw/hw3-elf/hw3-elf.html#4))
@@ -27,8 +27,7 @@ $ clang -o hello.o hello.c
 $ gcc -o hello.o hello.c 
 ```
 
-  
-## Reading ELF Details
+## ELF (Linux)
 
 * All details:
 ```
@@ -38,7 +37,6 @@ $ readelf -a hello.o
 * ELF header:
 ```
 $ readelf -h hello.o
-[ec2-user@ip-172-31-17-175 linker]$ readelf -h hello.o
 ELF Header:
 Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
 Class:                             ELF64
@@ -60,25 +58,17 @@ Size of section headers:           64 (bytes)
 Number of section headers:         29
 Section header string table index: 28
 ```
-On MacOS( or `objdump -p hello.o`): 
+
 ```
-￫ otool -h hello.o 
-hello.o:
-Mach header
-      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
- 0xfeedfacf 16777228          0  0x00           2    17       1056 0x00200085
-￫ 
-￫ 
-￫ hexdump -n 20  hello.o 
-0000000 facf feed 000c 0100 0000 0000 0002 0000
-0000010 0011 0000                              
+$ hexdump -n 20 hello.o 
+0000000 457f 464c 0102 0001 0000 0000 0000 0000
+0000010 0001 003e                              
 0000014 
 ```
 
-
 * All segments:
 ```
-[ec2-user@ip-172-31-17-175 linker]$ readelf --segments hello.o 
+$ readelf --segments hello.o 
 
 Elf file type is EXEC (Executable file)
 Entry point 0x400400
@@ -120,10 +110,107 @@ Program Headers:
    08     .init_array .fini_array .dynamic .got 
 ```
 
-Using `objdump` to view the object file content.
+## Mach-O(MacOS)
+
+* All details:
 ```
-$ objdump -p hello.o 
-$ otool -l hello.o 
+hello.o:	file format mach-o arm64
+Mach header
+      magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+MH_MAGIC_64   ARM64        ALL  0x00     EXECUTE    17       1056   NOUNDEFS DYLDLINK TWOLEVEL PIE
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot ---
+ initprot ---
+   nsects 0
+    flags (none)
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 392
+  segname __TEXT
+```
+
+* Header (or `objdump -p hello.o`):
+``` 
+￫ otool -h hello.o 
+hello.o:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           2    17       1056 0x00200085
+￫ 
+￫ 
+￫ hexdump -n 20  hello.o 
+0000000 facf feed 000c 0100 0000 0000 0002 0000
+0000010 0011 0000                              
+0000014 
+```
+
+* Commands with sections:
+```
+￫ otool -l hello.o 
+hello.o:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000000
+ initprot 0x00000000
+   nsects 0
+    flags 0x0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 392
+  segname __TEXT
+   vmaddr 0x0000000100000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 4
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000100003f7c
+      size 0x0000000000000020
+    offset 16252
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __stubs
+   segname __TEXT 
+... 
+```
+
+* Instruction set:
+```
+￫ otool -tvV hello.o 
+hello.o:
+(__TEXT,__text) section
+_main:
+0000000100003f7c	stp	x29, x30, [sp, #-0x10]!
+0000000100003f80	mov	x29, sp
+0000000100003f84	adrp	x0, 0 ; 0x100003000
+0000000100003f88	add	x0, x0, #0xfa8 ; literal pool for: "hello world!\n"
+0000000100003f8c	bl	0x100003f9c ; symbol stub for: _printf
+0000000100003f90	mov	w0, #0x0
+0000000100003f94	ldp	x29, x30, [sp], #0x10
+0000000100003f98	ret
 ```
 
 

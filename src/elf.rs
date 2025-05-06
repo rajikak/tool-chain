@@ -1,16 +1,16 @@
 #[derive(Debug)]
-pub struct Elf64File {
-    pub header:Elf64Header,
+pub struct ElfFile {
+    pub header:ElfHeader,
 }
 
 #[derive(Debug)]
-pub struct Elf64Header {
+pub struct ElfHeader {
     // https://github.com/torvalds/linux/blob/master/include/uapi/linux/elf.h#L234
-    pub ident:Elf64Identifier, // magic number and other info
+    pub ident:ElfIdentifier, // magic number and other info
 }
 
 #[derive(Debug)]
-pub struct Elf64Identifier {
+pub struct ElfIdentifier {
     
 }
 
