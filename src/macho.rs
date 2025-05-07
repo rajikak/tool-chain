@@ -9,17 +9,22 @@ pub struct MachoFile {
 #[derive(Debug)]
 pub struct MachoHeader {
     // https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L54
-    pub magic:MachoIdentifier,
+    pub magic:u32,
 }
 
 #[derive(Debug)]
 pub struct SegmentCommand {
-    // https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L355    
+    // https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L355
 }
 
 #[derive(Debug)]
 pub struct Segment {
-        
+    pub sections: Vec<Section>,
+}
+
+#[derive(Debug)]
+pub struct Section {
+
 }
 
 #[derive(Debug)]

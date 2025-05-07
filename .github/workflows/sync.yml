@@ -2,7 +2,7 @@ name: automated testing
 run-name: ${{ github.actor }} is updating repos using GitHub Actions 🚀
 on: [push]
 jobs:
-  sync-rajikak-to-baranasoftware:
+  automated-test:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."

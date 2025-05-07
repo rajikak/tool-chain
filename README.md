@@ -114,6 +114,7 @@ Program Headers:
 
 * All details:
 ```
+￫ o
 hello.o:	file format mach-o arm64
 Mach header
       magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
@@ -215,10 +216,12 @@ _main:
 
 
 # Reference Materials
-* [A ToC of the 20 part linker essay](https://lwn.net/Articles/276782/)
-* [I wrote a linker everyone can understand!](https://briancallahan.net/blog/20210609.html)
-* [Linkers and Loaders - John R. Levine](https://www.amazon.com/Linkers-Kaufmann-Software-Engineering-Programming/dp/1558604960)
 * [Toolchains](https://www.toolchains.net/)
+* [I wrote a linker everyone can understand!](https://briancallahan.net/blog/20210609.html)
+* [A ToC of the 20 part linker essay](https://lwn.net/Articles/276782/)
+* [Linkers and Loaders - John R. Levine](https://www.amazon.com/Linkers-Kaufmann-Software-Engineering-Programming/dp/1558604960)
+
+## Linux (Elf)
 * [OS X ABI Mach-O File Format Reference](https://github.com/aidansteele/osx-abi-macho-file-format-reference)
 * [Executable and Linkable Format (ELF)](https://www.cs.cmu.edu/afs/cs/academic/class/15213-f00/docs/elf.pdf)
 * [ELF Spec](https://refspecs.linuxfoundation.org/elf/elf.pdf)
@@ -228,3 +231,9 @@ _main:
 * [ELF in Depth](https://www.youtube.com/watch?v=nC1U1LJQL8o)
 * [elf.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/elf.h)
 * [ELF Format Cheatsheet](https://gist.github.com/x0nu11byt3/bcb35c3de461e5fb66173071a2379779)
+      
+## Mach-O(MacOS)
+* [Demystify Mach-O](https://www.youtube.com/watch?v=S9FFzsF0aIA)
+* [<match-o/loader.h>](https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h)
+* [Magic Numbers, the Mach Header, and more | Inside the Mach-O Format](https://www.youtube.com/watch?v=ZMe4h2rujE0)
+* 
