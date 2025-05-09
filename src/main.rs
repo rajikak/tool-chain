@@ -1,5 +1,6 @@
 use std::fs::File;
-use std::io::{BufReader, Read};
+use std::io::{Read};
+use clap::Parser;
 
 mod elf;
 mod macho;
@@ -10,16 +11,28 @@ fn error(action:&str) -> ! {
     eprintln!("something went wrong {} that file.", action);
     std::process::exit(1)
 }
+
+#[derive(Parser, Debug)]
+#[command(about, long_about=None)]
+struct Args {
+    #[arg(short, default_value="hexdump")]
+    tool:String,
+
+    #[arg(short)]
+    file:String,
+}
+
 fn main() {
+
+    let args = Args::parse();
+
+    println!("{}, {}", args.file, args.tool);
+
     let file = "assets/hello.o";
     let mut buf = Vec::new();
     let mut file = File::open(file).unwrap_or_else(|_| error("opening"));
     file.read_to_end(&mut buf).unwrap_or_else(|_| error("reading"));
-    
-    let magic1 = buf.pop();
-    let magic2 = buf.pop();
-    let magic3 = buf.pop();
-    let magic4 = buf.pop();
-    let magic5 = buf.pop();
-    print!("{:#x}, {:#x}, {:#x}, {:#x}, {:#x}", magic1.unwrap(), magic2.unwrap(), magic3.unwrap(), magic4.unwrap(), magic5.unwrap());
+    buf.reverse();
+
+    print!("{:#x}, {:#x}, {:#x}, {:#x}, {:#x}", buf.pop().unwrap(), buf.pop().unwrap(), buf.pop().unwrap(), buf.pop().unwrap(), buf.pop().unwrap());
 }
