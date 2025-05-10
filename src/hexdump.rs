@@ -15,11 +15,18 @@ impl Hexer {
         Self { buf }
     }
 
-    pub fn hex(&self) -> String {
-        let s: Vec<String> = self.buf.chunks(2).map(|c| {
-            if c.len() == 2 {format!("{:02x}{:02x}", c[0], c[1])}
-            else {format!("{:02x}", c[0])}
-        }).collect();
+    pub fn hex(&self, n: u8) -> String {
+        let s: Vec<String> = self
+            .buf
+            .chunks(2)
+            .map(|c| {
+                if c.len() == 2 {
+                    format!("{:02x}{:02x}", c[0], c[1])
+                } else {
+                    format!("{:02x}", c[0])
+                }
+            })
+            .collect();
         
         s.join(" ")
     }

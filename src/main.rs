@@ -37,7 +37,7 @@ fn main() {
 
     if args.tool.trim() == "hexdump" {
         let hex = Hexer::new(buf);
-        let s = hex.hex();
+        let s = hex.hex(10);
         println!("{}", s)
     } else {
         println!("not a supported tool, should be one of: hexdump, ldd, strings, strip.");
