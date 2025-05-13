@@ -1,6 +1,7 @@
 use std::fmt::format;
 use std::fs::File;
 use std::io::Read;
+use clap::builder::Str;
 
 #[derive(Debug)]
 pub struct Hexer {
@@ -15,8 +16,8 @@ impl Hexer {
         Self { buf }
     }
 
-    pub fn hex(&self, n: u8) -> String {
-        let s: Vec<String> = self
+    pub fn hex(&self, n: usize) -> String {
+        let mut s: Vec<String> = self
             .buf
             .chunks(2)
             .map(|c| {
@@ -28,6 +29,15 @@ impl Hexer {
             })
             .collect();
         
-        s.join(" ")
+        s.reverse();
+        let mut buf : Vec<String> = Vec::new();
+        for e in s {
+            let mut temp = Vec::new();
+            for _ in 0..n {
+                temp.push(e.clone());
+            }
+            buf.push(temp.join(" "))
+        }
+        buf.join("\n")
     }
 }
