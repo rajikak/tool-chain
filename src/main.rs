@@ -1,9 +1,11 @@
-use crate::hexdump::{Hexer};
+use crate::Tools::{Hexdump, Ldd, Str, Strip, Unknown};
+use crate::hexdump::Hexer;
 use clap::Parser;
 use std::fs::File;
 use std::io::Read;
 
 mod elf;
+mod experiments;
 mod hexdump;
 mod macho;
 
@@ -17,13 +19,52 @@ struct Args {
     file: String,
 }
 
+#[derive(PartialEq, Eq)]
+enum Tools {
+    Hexdump,
+    Ldd,
+    Strip,
+    Str,
+    Unknown,
+}
+
+impl Tools {
+    fn from(op: &str) -> Tools {
+        if op == "hexdump" {
+            Hexdump
+        } else if op == "ldd" {
+            Ldd
+        } else if op == "strip" {
+            Strip
+        } else if op == "string" {
+            Str
+        } else {
+            Unknown
+        }
+    }
+
+    fn str(op: Tools) -> &'static str {
+        if op == Hexdump {
+            "hexdump"
+        } else if op == Ldd {
+            "ldd"
+        } else if op == Strip {
+            "strip"
+        } else if op == Str {
+            "str"
+        } else {
+            "unknown"
+        }
+    }
+}
+
 fn main() {
     let args = Args::parse();
 
     let mut buf = Vec::new();
     match File::open(&args.file) {
         Ok(mut file) => match file.read_to_end(&mut buf) {
-            Ok(_) => buf.reverse(),
+            Ok(_) => {},
             Err(e2) => {
                 eprintln!("error reading file content: {}", e2);
                 std::process::exit(1)
@@ -35,12 +76,14 @@ fn main() {
         }
     }
 
-    if args.tool.trim() == "hexdump" {
+    let tool = Tools::from(args.tool.trim());
+
+    if tool == Hexdump {
         let hex = Hexer::new(buf);
-        let s = hex.hex(10);
+        let s = hex.hex(5);
         println!("{}", s)
     } else {
-        println!("not a supported tool, should be one of: hexdump, ldd, strings, strip.");
+        println!("not a supported tool: {}", args.tool.trim());
         return;
     }
 }
