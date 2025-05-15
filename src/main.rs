@@ -1,8 +1,9 @@
-use crate::Tools::{Hexdump, Ldd, Str, Strip, Unknown};
+use crate::Tools::{Elf, Hexdump, Ldd, Macho, Str, Strip, Unknown};
 use crate::hexdump::Hexer;
 use clap::Parser;
 use std::fs::File;
 use std::io::Read;
+use crate::macho::MachoFile;
 
 mod elf;
 mod experiments;
@@ -22,6 +23,8 @@ struct Args {
 #[derive(PartialEq, Eq)]
 enum Tools {
     Hexdump,
+    Elf,
+    Macho,
     Ldd,
     Strip,
     Str,
@@ -32,6 +35,10 @@ impl Tools {
     fn from(op: &str) -> Tools {
         if op == "hexdump" {
             Hexdump
+        } else if op == "elf" {
+            Elf                       
+        } else if op == "macho" {
+            Macho         
         } else if op == "ldd" {
             Ldd
         } else if op == "strip" {
@@ -52,6 +59,10 @@ impl Tools {
             "strip"
         } else if op == Str {
             "str"
+        } else if op == Elf {
+            "elf"    
+        } else if op == Macho {
+            "macho"    
         } else {
             "unknown"
         }
@@ -83,6 +94,9 @@ fn main() {
         let hex = Hexer::new(buf);
         let s = hex.hex(width);
         println!("{}", s)
+    } else if tool == Macho {
+        let mut macho = MachoFile::new(buf);
+        macho.print_magic();
     } else {
         println!("not a supported tool: {}", args.tool.trim());
         return;
