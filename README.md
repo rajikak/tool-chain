@@ -1,5 +1,20 @@
 A simple toolchain(file, strings, strip, readelf, hexdump, assembler, linker, loader, disassembler) written in Rust.
 
+## Hexdump 
+```
+$ target/debug/rtool -t hexdump  -f assets/hello.o | less  
+facf feed 000c 0100 0000 0000 0002 0000
+0011 0000 0420 0000 0085 0020 0000 0000
+0019 0000 0048 0000 5f5f 4150 4547 455a
+4f52 0000 0000 0000 0000 0000 0000 0000
+0000 0000 0001 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0019 0000 0188 0000
+5f5f 4554 5458 0000 0000 0000 0000 0000
+0000 0000 0001 0000 4000 0000 0000 0000
+0000 0000 0000 0000 4000 0000 0000 0000 
+```
+
 ## ELF File Formats
 * Linux ([Source](https://ics.uci.edu/~aburtsev/238P/hw/hw3-elf/hw3-elf.html#4))
 ![Linux](assets/linux.png)
@@ -114,7 +129,7 @@ Program Headers:
 
 * All details:
 ```
-￫ o
+$ otool -a hello.o
 hello.o:	file format mach-o arm64
 Mach header
       magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
@@ -139,14 +154,13 @@ Load command 1
 
 * Header (or `objdump -p hello.o`):
 ``` 
-￫ otool -h hello.o 
+$ otool -h hello.o 
 hello.o:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2    17       1056 0x00200085
-￫ 
-￫ 
-￫ hexdump -n 20  hello.o 
+  
+$ hexdump -n 20  hello.o 
 0000000 facf feed 000c 0100 0000 0000 0002 0000
 0000010 0011 0000                              
 0000014 
@@ -154,7 +168,7 @@ Mach header
 
 * Commands with sections:
 ```
-￫ otool -l hello.o 
+$ otool -l hello.o 
 hello.o:
 Load command 0
       cmd LC_SEGMENT_64
@@ -200,7 +214,7 @@ Section
 
 * Instruction set:
 ```
-￫ otool -tvV hello.o 
+$ otool -tvV hello.o 
 hello.o:
 (__TEXT,__text) section
 _main:
@@ -236,4 +250,3 @@ _main:
 * [Demystify Mach-O](https://www.youtube.com/watch?v=S9FFzsF0aIA)
 * [<match-o/loader.h>](https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h)
 * [Magic Numbers, the Mach Header, and more | Inside the Mach-O Format](https://www.youtube.com/watch?v=ZMe4h2rujE0)
-* 

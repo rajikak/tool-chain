@@ -12,7 +12,7 @@ impl Hexer {
     }
 
     pub fn hex(&self, n: usize) -> String {
-        let s: Vec<String> = self
+        let mut s: Vec<String> = self
             .buf
             .chunks(2)
             .map(|c| {
@@ -23,22 +23,13 @@ impl Hexer {
                 }
             })
             .collect();
-        
-        let mut chunks = Vec::new();
-        for chunk in s.chunks(2) {
-            chunks.push(chunk.to_vec());
-        }
-        
-        let mut row = Vec::new();
-        for chunk in chunks {
-            row.push(chunk.join(""));
-        }
+
+        s.reverse();
         
         let mut res = Vec::new();
-        for chunk in row.chunks(n) {
-            res.push(chunk.join(" "));
+        for chunk in s.chunks(n) {
+            res.push(chunk.join(" "))
         }
-        
         res.join("\n")
     }
 }

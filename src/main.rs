@@ -64,7 +64,7 @@ fn main() {
     let mut buf = Vec::new();
     match File::open(&args.file) {
         Ok(mut file) => match file.read_to_end(&mut buf) {
-            Ok(_) => {},
+            Ok(_) => {buf.reverse();},
             Err(e2) => {
                 eprintln!("error reading file content: {}", e2);
                 std::process::exit(1)
@@ -78,9 +78,10 @@ fn main() {
 
     let tool = Tools::from(args.tool.trim());
 
+    let width = 8;
     if tool == Hexdump {
         let hex = Hexer::new(buf);
-        let s = hex.hex(5);
+        let s = hex.hex(width);
         println!("{}", s)
     } else {
         println!("not a supported tool: {}", args.tool.trim());
