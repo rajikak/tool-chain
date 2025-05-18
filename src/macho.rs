@@ -40,7 +40,8 @@ pub struct MachoHeader {
 }
 
 impl MachoHeader {
-    pub fn new(magic: String) -> Self {
+    pub fn new(mut header: Vec<u8>) -> Self {
+        let magic = format!("{:02x}{:02x}{:02x}{:02x}", header.pop().unwrap(), header.pop().unwrap(), header.pop().unwrap(), header.pop().unwrap()); 
         Self { magic }
     }
 }
