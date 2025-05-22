@@ -3,7 +3,7 @@ use crate::hexdump::Hexer;
 use clap::Parser;
 use std::fs::File;
 use std::io::Read;
-use crate::macho::MachoFile;
+use crate::macho::MachFile;
 
 mod elf;
 mod experiments;
@@ -95,8 +95,7 @@ fn main() {
         let s = hex.hex(width);
         println!("{}", s)
     } else if tool == Macho {
-        let mut macho = MachoFile::new(buf);
-        macho.print_magic();
+        // 
     } else {
         println!("not a supported tool: {}", args.tool.trim());
         return;
