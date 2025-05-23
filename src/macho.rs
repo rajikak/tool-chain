@@ -1,12 +1,10 @@
-use crate::Tools::Macho;
-use std::fmt::format;
-use std::num::ParseIntError;
+use nom::number::Endianness;
 
 pub const MAGIC: u32 = 0xfeed_face; // magic field - 32 bit https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L65
-pub const CIGAM: u32 = 0xcdfa_edfe; // reverse 
+pub const CIGAM: u32 = 0xcdfa_edfe; // reverse -- little endian (need to swap bytes)
 
 pub const MAGIC64: u32 = 0xfeed_facf; // magic field - 64 bit https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L84
-pub const CIGAM64: u32 = 0xcffa_edfe; // reverse
+pub const CIGAM64: u32 = 0xcffa_edfe; // reverse -- little endian (need to swap bytes)
 
 #[derive(Debug)]
 pub struct MachFile {
@@ -32,7 +30,7 @@ impl MachFile {
     }
 
     pub fn str(&self, file: &str) -> String {
-        format!("{}", file)
+        format!("{}:\n{}", file, self.header.str())
     }
 }
 
@@ -40,6 +38,7 @@ impl MachFile {
 pub struct MachHeader {
     // https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h#L72
     pub magic: u32,
+    pub endianness: Endianness,
 }
 
 impl MachHeader {
@@ -50,17 +49,35 @@ impl MachHeader {
         );
         if let Ok(MAGIC) = res {
             let magic = MAGIC;
-            Ok(MachHeader { magic })
+            let endianness = Endianness::Big;
+            Ok(MachHeader { magic, endianness })
         } else if let Ok(MAGIC64) = res {
             let magic = MAGIC64;
-            Ok(MachHeader { magic })
+            let endianness = Endianness::Big;
+            Ok(MachHeader { magic, endianness })
+        } else if let Ok(CIGAM) = res {
+            let magic = CIGAM;
+            let endianness = Endianness::Little;
+            Ok(MachHeader{magic, endianness})
+        } else if let Ok(CIGAM64) = res {
+            let magic = CIGAM64;
+            let endianness = Endianness::Little;
+            Ok(MachHeader{magic,endianness})
         } else {
             Err("not a matching matcho header")
         }
     }
 
     pub fn str(&self) -> String {
-        format!("magic: {:x}", self.magic)
+        let mut endianness = "";
+        if self.endianness == Endianness::Little {
+            endianness = "little"
+        } else if self.endianness == Endianness::Big {
+            endianness = "big"
+        } else {
+            endianness = "native"
+        }
+        format!("match header\nendianness: {}\nmagic: 0x{:x}", endianness, self.magic)
     }
 }
 

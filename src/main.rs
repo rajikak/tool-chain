@@ -97,12 +97,14 @@ fn main() {
         let s = hex.hex(width);
         println!("{}", s)
     } else if tool == Macho {
+        buf.reverse();
         match MachFile::parse(buf.as_slice()) {
             Ok(r) => {
                 println!("{}", r.str(args.file.as_str()))
             }
             Err(e) => {
-                println!("otool error: {}", e)
+                eprintln!("macho tool error: {}", e);
+                std::process::exit(1);
             }
         }
     } else {
