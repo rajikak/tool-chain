@@ -16,23 +16,25 @@ pub struct MachFile {
     pub segments: Vec<Segment>,
 }
 
-// impl MachFile {
-//     pub fn new(buf: &[u8]) -> Self {
-//         Self {
-//             header: MachHeader::new("".to_string()),
-//             commands: Vec::new(),
-//             segments: Vec::new(),
-//         }
-//     }
-//
-//     pub fn print_magic(&mut self) {
-//         self.buf.reverse();
-//         let mut magic: Vec<u8> = self.buf.drain(0..4).collect();
-//
-//         let str = format!("{:02x}{:02x}{:02x}{:02x}", magic.pop().unwrap(), magic.pop().unwrap(), magic.pop().unwrap(), magic.pop().unwrap());
-//         println!("magic: 0x{}", str);
-//     }
-// }
+impl MachFile {
+    pub fn parse(input: &[u8]) -> Result<MachFile, &str> {
+        let commands = Vec::new();
+        let segments = Vec::new();
+
+        match MachHeader::parse(input) {
+            Ok(header) => Ok(MachFile {
+                header,
+                commands,
+                segments,
+            }),
+            Err(e) => Err(e),
+        }
+    }
+
+    pub fn str(&self, file: &str) -> String {
+        format!("{}", file)
+    }
+}
 
 #[derive(Debug)]
 pub struct MachHeader {
@@ -55,6 +57,10 @@ impl MachHeader {
         } else {
             Err("not a matching matcho header")
         }
+    }
+
+    pub fn str(&self) -> String {
+        format!("magic: {:x}", self.magic)
     }
 }
 
