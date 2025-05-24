@@ -1,6 +1,8 @@
-A simple toolchain(file, strings, strip, readelf, hexdump, assembler, linker, loader, disassembler) written in Rust.
+A simple toolchain (file, strings, strip, readelf, hexdump, assembler, linker, loader, disassembler) written in Rust.
 
-## Hexdump 
+## Rust toolchain demonstration
+
+### Hexdump 
 ```
 $ target/debug/rtool -t hexdump  -f assets/hello.o | less  
 facf feed 000c 0100 0000 0000 0002 0000
@@ -15,14 +17,27 @@ facf feed 000c 0100 0000 0000 0002 0000
 0000 0000 0000 0000 4000 0000 0000 0000 
 ```
 
-## ELF File Formats
+### Macho tool
+```
+$ ./target/debug/rtool -f assets/hello.o -t macho
+assets/hello.o:
+match header
+endianness: little
+magic: 0xcffaedfe
+cpu_type: 0xc001, sub_type: 0x0
+file_type: 0x2000, ncmds: 0x11000, size_of_cmds: 0x20400, flag: 0x850200 
+```
+
+## Research  
+
+### ELF file formats
 * Linux ([Source](https://ics.uci.edu/~aburtsev/238P/hw/hw3-elf/hw3-elf.html#4))
 ![Linux](assets/linux.png)
 
 * MacOS ([Source](https://github.com/aidansteele/osx-abi-macho-file-format-reference/blob/master/Mach-O_File_Format.pdf))
 ![MacOS](assets/mac.png)
 
-## Toolchain
+### Toolchain
 * Object (binaries, shared libs, core dumps) files can be analyzed using `objdump` and `otool` in MacOS and `readelf` in Linux.
 ```
 //hello.c 
@@ -42,7 +57,7 @@ $ clang -o hello.o hello.c
 $ gcc -o hello.o hello.c 
 ```
 
-## ELF (Linux)
+### ELF (Linux)
 
 * All details:
 ```
@@ -125,7 +140,7 @@ Program Headers:
    08     .init_array .fini_array .dynamic .got 
 ```
 
-## Mach-O(MacOS)
+### Mach-O(MacOS)
 
 * All details:
 ```
@@ -229,13 +244,13 @@ _main:
 ```
 
 
-# Reference Materials
+## Reference materials
 * [Toolchains](https://www.toolchains.net/)
 * [I wrote a linker everyone can understand!](https://briancallahan.net/blog/20210609.html)
 * [A ToC of the 20 part linker essay](https://lwn.net/Articles/276782/)
 * [Linkers and Loaders - John R. Levine](https://www.amazon.com/Linkers-Kaufmann-Software-Engineering-Programming/dp/1558604960)
 
-## Linux (Elf)
+### Linux (Elf)
 * [OS X ABI Mach-O File Format Reference](https://github.com/aidansteele/osx-abi-macho-file-format-reference)
 * [Executable and Linkable Format (ELF)](https://www.cs.cmu.edu/afs/cs/academic/class/15213-f00/docs/elf.pdf)
 * [ELF Spec](https://refspecs.linuxfoundation.org/elf/elf.pdf)
@@ -246,7 +261,7 @@ _main:
 * [elf.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/elf.h)
 * [ELF Format Cheatsheet](https://gist.github.com/x0nu11byt3/bcb35c3de461e5fb66173071a2379779)
       
-## Mach-O(MacOS)
+### Mach-O(MacOS)
 * [Demystify Mach-O](https://www.youtube.com/watch?v=S9FFzsF0aIA)
 * [<match-o/loader.h>](https://github.com/apple/darwin-xnu/blob/main/EXTERNAL_HEADERS/mach-o/loader.h)
 * [Magic Numbers, the Mach Header, and more | Inside the Mach-O Format](https://www.youtube.com/watch?v=ZMe4h2rujE0)
